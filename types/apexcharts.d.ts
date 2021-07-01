@@ -608,6 +608,10 @@ type ApexPlotOptions = {
       min?: number
       max?: number
     };
+    dataLabels: {
+      textAnchorVertical?: 'start' | 'middle' | 'end'
+      textAnchorHorizontal?: 'start' | 'middle' | 'end'
+    };
   }
   pie?: {
     startAngle?: number

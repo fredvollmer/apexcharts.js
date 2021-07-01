@@ -860,6 +860,14 @@ export default class Defaults {
           enabled: false,
         },
       },
+      plotOptions: {
+        treemap: {
+          dataLabels: {
+            textAnchorVertical: 'middle',
+            textAnchorHorizontal: 'middle'
+          }
+        }
+      }
     }
   }
 

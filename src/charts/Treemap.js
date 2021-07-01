@@ -177,15 +177,18 @@ export default class TreemapChart {
           dataPointIndex: j,
           w
         })
+
         let dataLabels = this.helpers.calculateDataLabels({
           text: formattedText,
-          x: (x1 + x2) / 2,
-          y: (y1 + y2) / 2 + this.strokeWidth / 2 + fontSize / 3,
+          x1,
+          x2,
+          y1,
+          y2,
           i,
           j,
           colorProps,
           fontSize,
-          series
+          strokeWidth: this.strokeWidth
         })
         if (w.config.dataLabels.enabled && dataLabels) {
           this.rotateToFitLabel(
