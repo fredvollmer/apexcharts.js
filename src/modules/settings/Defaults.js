@@ -587,6 +587,14 @@ export default class Defaults {
         tooltip: {
           enabled: false
         }
+      },
+      plotOptions: {
+        treemap: {
+          dataLabels: {
+            textAnchorVertical: 'middle',
+            textAnchorHorizontal: 'middle'
+          }
+        }
       }
     }
   }

@@ -137,7 +137,18 @@ export default class TreemapHelpers {
     }
   }
 
-  calculateDataLabels({ text, x, y, i, j, colorProps, fontSize }) {
+  calculateDataLabels({
+    text,
+    x1,
+    x2,
+    y1,
+    y2,
+    i,
+    j,
+    colorProps,
+    fontSize,
+    strokeWidth
+  }) {
     let w = this.w
     let dataLabelsConfig = w.config.dataLabels
 
@@ -155,9 +166,34 @@ export default class TreemapHelpers {
       const offX = dataLabelsConfig.offsetX
       const offY = dataLabelsConfig.offsetY
 
-      let dataLabelsX = x + offX
-      let dataLabelsY =
-        y + parseFloat(dataLabelsConfig.style.fontSize) / 3 + offY
+      let dataLabelsX, dataLabelsY, textAnchor
+
+      switch (w.config.plotOptions.treemap.dataLabels.textAnchorHorizontal) {
+        case 'start':
+          dataLabelsX = x1 + offX
+          break
+        case 'middle':
+          dataLabelsX = (x1 + x2) / 2 + offX
+          break
+        case 'end':
+          dataLabelsX = x2 + offX
+      }
+
+      switch (w.config.plotOptions.treemap.dataLabels.textAnchorVertical) {
+        case 'start':
+          dataLabelsY =
+            y1 +
+            strokeWidth / 2 +
+            fontSize / 3 +
+            parseFloat(dataLabelsConfig.style.fontSize) / 3 +
+            offY
+          break
+        case 'middle':
+          dataLabelsY = (y1 + y2) / 2 + strokeWidth / 2 + fontSize / 3 + offY
+          break
+        case 'end':
+          dataLabelsY = y2 - offY
+      }
 
       dataLabels.plotDataLabelsText({
         x: dataLabelsX,
@@ -168,7 +204,11 @@ export default class TreemapHelpers {
         color: colorProps.foreColor,
         parent: elDataLabelsWrap,
         fontSize,
-        dataLabelsConfig
+        dataLabelsConfig: {
+          ...dataLabelsConfig,
+          textAnchor:
+            w.config.plotOptions.treemap.dataLabels.textAnchorHorizontal
+        }
       })
     }
 
