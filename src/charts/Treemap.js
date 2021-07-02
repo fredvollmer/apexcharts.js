@@ -196,6 +196,16 @@ export default class TreemapChart {
         elSeries.add(elRect)
 
         if (dataLabels !== null) {
+          // If the label doesn't fit in the cell even after rotation, hide it.
+          const labelBbox = dataLabels.rbox(dataLabels.doc())
+          if (
+            labelBbox.x < toRect.x ||
+            labelBbox.x + labelBbox.width > toRect.x + toRect.width ||
+            labelBbox.y < toRect.y ||
+            labelBbox.y + labelBbox.height > toRect.y + toRect.height
+          ) {
+            dataLabels.node.setAttribute('visibility', 'hidden')
+          }
           elSeries.add(dataLabels)
         }
       })

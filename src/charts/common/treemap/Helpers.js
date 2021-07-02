@@ -166,7 +166,7 @@ export default class TreemapHelpers {
       const offX = dataLabelsConfig.offsetX
       const offY = dataLabelsConfig.offsetY
 
-      let dataLabelsX, dataLabelsY, textAnchor
+      let dataLabelsX, dataLabelsY
 
       switch (w.config.plotOptions.treemap.dataLabels.textAnchorHorizontal) {
         case 'start':
