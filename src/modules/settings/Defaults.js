@@ -864,7 +864,8 @@ export default class Defaults {
         treemap: {
           dataLabels: {
             textAnchorVertical: 'middle',
-            textAnchorHorizontal: 'middle'
+            textAnchorHorizontal: 'middle',
+            autoAdjustFontSize: true
           }
         }
       }

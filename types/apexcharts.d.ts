@@ -610,7 +610,8 @@ type ApexPlotOptions = {
     };
     dataLabels: {
       textAnchorVertical?: 'start' | 'middle' | 'end'
-      textAnchorHorizontal?: 'start' | 'middle' | 'end'
+      textAnchorHorizontal?: 'start' | 'middle' | 'end',
+      autoAdjustFontSize?: boolean
     };
   }
   pie?: {

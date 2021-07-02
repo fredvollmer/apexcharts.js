@@ -169,7 +169,10 @@ export default class TreemapChart {
           }
         }
 
-        const fontSize = this.getFontSize(r)
+        const fontSize = w.config.plotOptions.treemap.dataLabels
+          .autoAdjustFontSize
+          ? this.getFontSize(r)
+          : w.config.dataLabels.style.fontSize
 
         let formattedText = w.config.dataLabels.formatter(this.labels[i][j], {
           value: w.globals.series[i][j],
