@@ -17,7 +17,7 @@ export default class TreemapChart {
     this.ctx = ctx
     this.w = ctx.w
 
-    this.strokeWidth = this.w.config.stroke.width
+    this.strokeWidth = this.w.config.stroke.width || 0
     this.helpers = new Helpers(ctx)
     this.dynamicAnim = this.w.config.chart.animations.dynamicAnimation
 
@@ -77,31 +77,28 @@ export default class TreemapChart {
       })
 
       node.forEach((r, j) => {
-        const x1 = r[0]
-        const y1 = r[1]
+        const x1 = r[0] + this.strokeWidth / 2
+        const y1 = r[1] + this.strokeWidth / 2
         const x2 = r[2]
         const y2 = r[3]
+        const width = x2 - x1 - this.strokeWidth / 2
+        const height = y2 - y1 - this.strokeWidth / 2
         let elRect = graphics.drawRect(
           x1,
           y1,
-          x2 - x1,
-          y2 - y1,
+          width,
+          height,
           0,
           '#fff',
           1,
-          this.strokeWidth,
-          w.config.plotOptions.treemap.useFillColorAsStroke
-            ? color
-            : w.globals.stroke.colors[i]
+          this.strokeWidth
         )
         elRect.attr({
           cx: x1,
           cy: y1,
           index: i,
           i,
-          j,
-          width: x2 - x1,
-          height: y2 - y1
+          j
         })
 
         let colorProps = this.helpers.getShadeColor(
@@ -110,16 +107,20 @@ export default class TreemapChart {
           j,
           this.negRange
         )
-        let color = colorProps.color
-
-        if (
-          typeof w.config.series[i].data[j] !== 'undefined' &&
-          w.config.series[i].data[j].fillColor
-        ) {
-          color = w.config.series[i].data[j].fillColor
+        let fillColor = colorProps.color
+        let strokeColor = w.config.plotOptions.treemap.useFillColorAsStroke
+          ? fillColor
+          : w.globals.stroke.colors[i]
+        if (typeof w.config.series[i].data[j] !== 'undefined') {
+          if (w.config.series[i].data[j].fillColor) {
+            fillColor = w.config.series[i].data[j].fillColor
+          }
+          if (w.config.series[i].data[j].strokeColor) {
+            strokeColor = w.config.series[i].data[j].strokeColor
+          }
         }
         let pathFill = fill.fillPath({
-          color,
+          color: fillColor,
           seriesNumber: i,
           dataPointIndex: j
         })
@@ -129,20 +130,25 @@ export default class TreemapChart {
         elRect.attr({
           fill: pathFill
         })
+        if (strokeColor && this.strokeWidth) {
+          elRect.attr({
+            stroke: strokeColor
+          })
+        }
 
         this.helpers.addListeners(elRect)
 
         let fromRect = {
-          x: x1 + (x2 - x1) / 2,
-          y: y1 + (y2 - y1) / 2,
+          x: x1 + width / 2,
+          y: y1 + height / 2,
           width: 0,
           height: 0
         }
         let toRect = {
           x: x1,
           y: y1,
-          width: x2 - x1,
-          height: y2 - y1
+          width,
+          height
         }
 
         if (w.config.chart.animations.enabled && !w.globals.dataChanged) {

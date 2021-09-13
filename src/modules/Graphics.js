@@ -225,8 +225,8 @@ class Graphics {
   drawRect(
     x1 = 0,
     y1 = 0,
-    x2 = 0,
-    y2 = 0,
+    width = 0,
+    height = 0,
     radius = 0,
     color = '#fefefe',
     opacity = 1,
@@ -240,8 +240,8 @@ class Graphics {
     rect.attr({
       x: x1,
       y: y1,
-      width: x2 > 0 ? x2 : 0,
-      height: y2 > 0 ? y2 : 0,
+      width: width > 0 ? width : 0,
+      height: height > 0 ? height : 0,
       rx: radius,
       ry: radius,
       opacity,
