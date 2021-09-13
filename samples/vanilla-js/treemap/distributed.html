@@ -54,12 +54,23 @@
 <script>
 
   var options = {
+    tooltip: {
+      y: {
+        title: {
+          formatter: (...args) => {
+            console.log(args);
+            return "dsaff";
+          },
+        }
+      },
+    },
     series: [
       {
         data: [
           {
             x: 'New Delhi',
-            y: 218
+            y: 218,
+            strokeColor: '#2F80ED',
           },
           {
             x: 'Kolkata',
@@ -115,14 +126,19 @@
     legend: {
       show: false
     },
+    xaxis: {labels: {show: false}},
     chart: {
+      animations: {enabled: false},
+      toolbar: { show: false },
       height: 350,
+      width: '100%',
       type: 'treemap'
     },
     title: {
       text: 'Distibuted Treemap (different color for each cell)',
       align: 'center'
     },
+    stroke: {width: 6 },
     colors: [
       '#3B93A5',
       '#F7B844',
@@ -148,6 +164,7 @@
         dataLabels: {
           textAnchorHorizontal: 'start',
           textAnchorVertical: 'start',
+          autoAdjustFontSize: false
         },
       }
     }
