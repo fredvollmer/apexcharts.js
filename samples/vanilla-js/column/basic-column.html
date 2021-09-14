@@ -1,115 +1,195 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>Basic Column - Grouped</title>
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+  <title>Basic Column - Grouped</title>
 
-    <link href="../../assets/styles.css" rel="stylesheet" />
+  <link href="../../assets/styles.css" rel="stylesheet"/>
 
-    <style>
-      
-        #chart {
+  <style>
+
+    #chart {
       max-width: 650px;
       margin: 35px auto;
     }
-      
-    </style>
 
-    <script>
-      window.Promise ||
-        document.write(
-          '<script src="https://cdn.jsdelivr.net/npm/promise-polyfill@8/dist/polyfill.min.js"><\/script>'
-        )
-      window.Promise ||
-        document.write(
-          '<script src="https://cdn.jsdelivr.net/npm/eligrey-classlist-js-polyfill@1.2.20171210/classList.min.js"><\/script>'
-        )
-      window.Promise ||
-        document.write(
-          '<script src="https://cdn.jsdelivr.net/npm/findindex_polyfill_mdn"><\/script>'
-        )
-    </script>
+  </style>
 
-    
-    <script src="../../../dist/apexcharts.js"></script>
-    
+  <script>
+    window.Promise ||
+    document.write(
+      '<script src="https://cdn.jsdelivr.net/npm/promise-polyfill@8/dist/polyfill.min.js"><\/script>'
+    )
+    window.Promise ||
+    document.write(
+      '<script src="https://cdn.jsdelivr.net/npm/eligrey-classlist-js-polyfill@1.2.20171210/classList.min.js"><\/script>'
+    )
+    window.Promise ||
+    document.write(
+      '<script src="https://cdn.jsdelivr.net/npm/findindex_polyfill_mdn"><\/script>'
+    )
+  </script>
 
-    <script>
-      // Replace Math.random() with a pseudo-random number generator to get reproducible results in e2e tests
-      // Based on https://gist.github.com/blixt/f17b47c62508be59987b
-      var _seed = 42;
-      Math.random = function() {
-        _seed = _seed * 16807 % 2147483647;
-        return (_seed - 1) / 2147483646;
-      };
-    </script>
 
-    
-  </head>
+  <script src="../../../dist/apexcharts.js"></script>
 
-  <body>
-     <div id="chart"></div>
 
-    <script>
-      
-        var options = {
-          series: [{
-          name: 'Net Profit',
-          data: [44, 55, 57, 56, 61, 58, 63, 60, 66]
-        }, {
-          name: 'Revenue',
-          data: [76, 85, 101, 98, 87, 105, 91, 114, 94]
-        }, {
-          name: 'Free Cash Flow',
-          data: [35, 41, 36, 26, 45, 48, 52, 53, 41]
-        }],
-          chart: {
-          type: 'bar',
-          height: 350
-        },
-        plotOptions: {
-          bar: {
-            horizontal: false,
-            columnWidth: '55%',
-            endingShape: 'rounded'
+  <script>
+    // Replace Math.random() with a pseudo-random number generator to get reproducible results in e2e tests
+    // Based on https://gist.github.com/blixt/f17b47c62508be59987b
+    var _seed = 42;
+    Math.random = function () {
+      _seed = _seed * 16807 % 2147483647;
+      return (_seed - 1) / 2147483646;
+    };
+  </script>
+
+
+</head>
+
+<body>
+<div id="chart"></div>
+
+<script>
+
+  var options = {
+    legend: {
+      position: 'top',
+      horizontalAlign: 'left',
+      offsetX: -33,
+      offsetY: 18,
+      fontFamily: 'Roboto',
+      fontWeight: 300,
+      markers: {
+        radius: 0,
+        width: 8,
+        height: 8
+      },
+      labels: {
+        colors: ['#43505E']
+      }
+    },
+    title: {margin: 0},
+    series: [
+      {
+        name: 'Under',
+        data: [
+          {
+            x: 'Period 1',
+            y: 2
           },
-        },
+          {
+            x: 'Period 2',
+            y: 3,
+          },
+        ],
+      },
+      {
+        name: 'Inline',
+        data: [
+          {
+            x: 'Period 1',
+            y: 6,
+          },
+          {
+            x: 'Period 2',
+            y: 4,
+          },
+        ],
+      },
+      {
+        name:'Over',
+        data: [
+          {
+            x: 'Period 1',
+            y: 5,
+          },
+          {
+            x: 'Period 2',
+            y: 8,
+          },
+        ],
+      },
+    ],
+    chart: {
+      height: 172,
+      width: '100%',
+      type: 'bar',
+      toolbar: {show: false},
+      animations: {enabled: false},
+    },
+    plotOptions: {
+      bar: {
+        horizontal: false,
+        columnWidth: '50%',
+        barSpacing: 40,
         dataLabels: {
-          enabled: false
-        },
-        stroke: {
-          show: true,
-          width: 2,
-          colors: ['transparent']
-        },
-        xaxis: {
-          categories: ['Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct'],
-        },
-        yaxis: {
-          title: {
-            text: '$ (thousands)'
-          }
-        },
-        fill: {
-          opacity: 1
-        },
-        tooltip: {
-          y: {
-            formatter: function (val) {
-              return "$ " + val + " thousands"
-            }
-          }
+          position: 'bottom'
         }
-        };
+      }
+    },
+    dataLabels: {
+      enabled: true,
+      offsetY: 0,
+      style: {
+        colors: ['#43505E'],
+        fontSize: '10px',
+        fontFamily: 'Roboto',
+        fontWeight: 300
+      },
+    },
+    stroke: {width: 2},
+    xaxis: {
+      type: 'category',
+      labels: {
+        show: true,
+        offsetY: 3,
+        offsetX: -3,
+        style: {
+          colors: ['#43505E'],
+          fontSize: '10px',
+          fontFamily: 'Roboto',
+          fontWeight: 500
+        }
+      }
+    },
+    yaxis: {
+      title: {
+        text: 'Patients',
+        style: {
+          color: '#43505E',
+          fontSize: '10px',
+          fontFamily: 'Roboto',
+          fontWeight: 500
+        }
+      },
 
-        var chart = new ApexCharts(document.querySelector("#chart"), options);
-        chart.render();
-      
-      
-    </script>
+    },
+    tooltip: {
+      y: {}
+    },
+    states: {
+      hover: {
+        filter: {
+          type: 'none'
+        }
+      },
+      active: {
+        filter: {
+          type: 'none'
+        }
+      }
+    },
+  };
 
-    
-  </body>
+  var chart = new ApexCharts(document.querySelector("#chart"), options);
+  chart.render();
+
+
+</script>
+
+
+</body>
 </html>

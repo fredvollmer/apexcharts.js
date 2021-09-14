@@ -53,6 +53,8 @@ export default class Helpers {
     let x, y, yDivision, xDivision, barHeight, barWidth, zeroH, zeroW
 
     let dataPoints = w.globals.dataPoints
+    const barSpacing = this.barCtx.barOptions.barSpacing || 0
+
     if (this.barCtx.isRangeBar) {
       // timeline rangebar chart
       dataPoints = w.globals.labels.length
@@ -93,6 +95,9 @@ export default class Helpers {
     } else {
       // width divided into equal parts
       xDivision = w.globals.gridWidth / this.barCtx.visibleItems
+      if (this.barCtx.seriesLen > 0) {
+        xDivision -= barSpacing / 2
+      }
       if (w.config.xaxis.convertedCatToNumeric) {
         xDivision = w.globals.gridWidth / w.globals.dataPoints
       }
@@ -138,7 +143,10 @@ export default class Helpers {
 
       x =
         w.globals.padHorizontal +
-        (xDivision - barWidth * this.barCtx.seriesLen) / 2
+        (xDivision -
+          barWidth * this.barCtx.seriesLen -
+          (barSpacing / 2) * this.barCtx.seriesLen) /
+          2
     }
 
     return {

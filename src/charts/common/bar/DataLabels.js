@@ -217,7 +217,14 @@ export default class BarDataLabels {
       if (w.globals.isXNumeric) {
         dataLabelsX = bcx - barWidth / 2 + offX
       } else {
+        let dataPointsDividedWidth = w.globals.gridWidth / w.globals.dataPoints
+        if (w.config.plotOptions.bar.barSpacing) {
+          dataPointsDividedWidth -= w.config.plotOptions.bar.barSpacing / 2
+        }
         dataLabelsX = bcx - dataPointsDividedWidth + barWidth / 2 + offX
+        if (w.config.plotOptions.bar.barSpacing) {
+          dataLabelsX += w.config.plotOptions.bar.barSpacing * i
+        }
       }
     }
 
