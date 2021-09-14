@@ -1,5 +1,5 @@
 /*!
- * ApexCharts v3.27.1
+ * ApexCharts v3.28.1
  * (c) 2018-2021 ApexCharts
  * Released under the MIT License.
  */
@@ -1170,8 +1170,8 @@
       value: function drawRect() {
         var x1 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
         var y1 = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
-        var x2 = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
-        var y2 = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 0;
+        var width = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
+        var height = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 0;
         var radius = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : 0;
         var color = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : '#fefefe';
         var opacity = arguments.length > 6 && arguments[6] !== undefined ? arguments[6] : 1;
@@ -1183,8 +1183,8 @@
         rect.attr({
           x: x1,
           y: y1,
-          width: x2 > 0 ? x2 : 0,
-          height: y2 > 0 ? y2 : 0,
+          width: width > 0 ? width : 0,
+          height: height > 0 ? height : 0,
           rx: radius,
           ry: radius,
           opacity: opacity,
@@ -5402,12 +5402,21 @@
         barHeight = Math.abs(barHeight);
         var vertical = w.config.plotOptions.bar.dataLabels.orientation === 'vertical';
         bcx = bcx - strokeWidth / 2;
-        var dataPointsDividedWidth = w.globals.gridWidth / w.globals.dataPoints;
 
         if (w.globals.isXNumeric) {
           dataLabelsX = bcx - barWidth / 2 + offX;
         } else {
+          var dataPointsDividedWidth = w.globals.gridWidth / w.globals.dataPoints;
+
+          if (w.config.plotOptions.bar.barSpacing) {
+            dataPointsDividedWidth -= w.config.plotOptions.bar.barSpacing / 2;
+          }
+
           dataLabelsX = bcx - dataPointsDividedWidth + barWidth / 2 + offX;
+
+          if (w.config.plotOptions.bar.barSpacing) {
+            dataLabelsX += w.config.plotOptions.bar.barSpacing * i;
+          }
         }
 
         if (vertical) {
@@ -6160,6 +6169,7 @@
         var w = this.w;
         var x, y, yDivision, xDivision, barHeight, barWidth, zeroH, zeroW;
         var dataPoints = w.globals.dataPoints;
+        var barSpacing = this.barCtx.barOptions.barSpacing || 0;
 
         if (this.barCtx.isTimelineBar) {
           // timeline rangebar chart
@@ -6189,6 +6199,10 @@
           // width divided into equal parts
           xDivision = w.globals.gridWidth / this.barCtx.visibleItems;
 
+          if (this.barCtx.seriesLen > 0) {
+            xDivision -= barSpacing / 2;
+          }
+
           if (w.config.xaxis.convertedCatToNumeric) {
             xDivision = w.globals.gridWidth / w.globals.dataPoints;
           }
@@ -6215,7 +6229,7 @@
           }
 
           zeroH = w.globals.gridHeight - this.barCtx.baseLineY[this.barCtx.yaxisIndex] - (this.barCtx.isReversed ? w.globals.gridHeight : 0) + (this.barCtx.isReversed ? this.barCtx.baseLineY[this.barCtx.yaxisIndex] * 2 : 0);
-          x = w.globals.padHorizontal + (xDivision - barWidth * this.barCtx.seriesLen) / 2;
+          x = w.globals.padHorizontal + (xDivision - barWidth * this.barCtx.seriesLen - barSpacing / 2 * this.barCtx.seriesLen) / 2;
         }
 
         return {
@@ -6982,6 +6996,11 @@
         }
 
         var barXPosition = x + barWidth * this.visibleI;
+
+        if (i > 0 && this.barOptions.barSpacing) {
+          barXPosition += this.barOptions.barSpacing * i;
+        }
+
         y = this.barHelpers.getYForValue(this.series[i][j], zeroH);
         var paths = this.barHelpers.getColumnPaths({
           barXPosition: barXPosition,
@@ -8308,7 +8327,8 @@
             treemap: {
               dataLabels: {
                 textAnchorVertical: 'middle',
-                textAnchorHorizontal: 'middle'
+                textAnchorHorizontal: 'middle',
+                autoAdjustFontSize: true
               }
             }
           }
@@ -22696,7 +22716,7 @@
 
       this.ctx = ctx;
       this.w = ctx.w;
-      this.strokeWidth = this.w.config.stroke.width;
+      this.strokeWidth = this.w.config.stroke.width || 0;
       this.helpers = new TreemapHelpers(ctx);
       this.dynamicAnim = this.w.config.chart.animations.dynamicAnimation;
       this.labels = [];
@@ -22748,31 +22768,38 @@
             class: 'apexcharts-data-labels'
           });
           node.forEach(function (r, j) {
-            var x1 = r[0];
-            var y1 = r[1];
+            var x1 = r[0] + _this.strokeWidth / 2;
+            var y1 = r[1] + _this.strokeWidth / 2;
             var x2 = r[2];
             var y2 = r[3];
-            var elRect = graphics.drawRect(x1, y1, x2 - x1, y2 - y1, 0, '#fff', 1, _this.strokeWidth, w.config.plotOptions.treemap.useFillColorAsStroke ? color : w.globals.stroke.colors[i]);
+            var width = x2 - x1 - _this.strokeWidth / 2;
+            var height = y2 - y1 - _this.strokeWidth / 2;
+            var elRect = graphics.drawRect(x1, y1, width, height, 0, '#fff', 1, _this.strokeWidth);
             elRect.attr({
               cx: x1,
               cy: y1,
               index: i,
               i: i,
-              j: j,
-              width: x2 - x1,
-              height: y2 - y1
+              j: j
             });
 
             var colorProps = _this.helpers.getShadeColor(w.config.chart.type, i, j, _this.negRange);
 
-            var color = colorProps.color;
+            var fillColor = colorProps.color;
+            var strokeColor = w.config.plotOptions.treemap.useFillColorAsStroke ? fillColor : w.globals.stroke.colors[i];
 
-            if (typeof w.config.series[i].data[j] !== 'undefined' && w.config.series[i].data[j].fillColor) {
-              color = w.config.series[i].data[j].fillColor;
+            if (typeof w.config.series[i].data[j] !== 'undefined') {
+              if (w.config.series[i].data[j].fillColor) {
+                fillColor = w.config.series[i].data[j].fillColor;
+              }
+
+              if (w.config.series[i].data[j].strokeColor) {
+                strokeColor = w.config.series[i].data[j].strokeColor;
+              }
             }
 
             var pathFill = fill.fillPath({
-              color: color,
+              color: fillColor,
               seriesNumber: i,
               dataPointIndex: j
             });
@@ -22781,19 +22808,25 @@
               fill: pathFill
             });
 
+            if (strokeColor && _this.strokeWidth) {
+              elRect.attr({
+                stroke: strokeColor
+              });
+            }
+
             _this.helpers.addListeners(elRect);
 
             var fromRect = {
-              x: x1 + (x2 - x1) / 2,
-              y: y1 + (y2 - y1) / 2,
+              x: x1 + width / 2,
+              y: y1 + height / 2,
               width: 0,
               height: 0
             };
             var toRect = {
               x: x1,
               y: y1,
-              width: x2 - x1,
-              height: y2 - y1
+              width: width,
+              height: height
             };
 
             if (w.config.chart.animations.enabled && !w.globals.dataChanged) {
@@ -22820,8 +22853,7 @@
               }
             }
 
-            var fontSize = _this.getFontSize(r);
-
+            var fontSize = w.config.plotOptions.treemap.dataLabels.autoAdjustFontSize ? _this.getFontSize(r) : w.config.dataLabels.style.fontSize;
             var formattedText = w.config.dataLabels.formatter(_this.labels[i][j], {
               value: w.globals.series[i][j],
               seriesIndex: i,

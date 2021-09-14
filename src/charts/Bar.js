@@ -427,6 +427,10 @@ class Bar {
 
     let barXPosition = x + barWidth * this.visibleI
 
+    if (i > 0 && this.barOptions.barSpacing) {
+      barXPosition += this.barOptions.barSpacing * i
+    }
+
     y = this.barHelpers.getYForValue(this.series[i][j], zeroH)
 
     const paths = this.barHelpers.getColumnPaths({
